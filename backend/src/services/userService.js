@@ -88,6 +88,28 @@ export async function updateUserRole(userId, role) {
   return stripPassword(user);
 }
 
+export async function updateUserPassword(userId, passwordHash) {
+  if (supabaseEnabled) {
+    const { error } = await supabase
+      .from("users")
+      .update({ password_hash: passwordHash })
+      .eq("id", userId);
+
+    if (error) throw new Error(error.message);
+    return true;
+  }
+
+  const user = demoUsers.find((entry) => entry.id === userId);
+  if (!user) {
+    const error = new Error("User not found");
+    error.status = 404;
+    throw error;
+  }
+
+  user.passwordHash = passwordHash;
+  return true;
+}
+
 function normalizeUser(user, includePassword = false) {
   const normalized = {
     id: user.id,
