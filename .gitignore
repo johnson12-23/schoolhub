@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.env
+.env.local
+frontend/.env
+backend/.env
+backend/uploads/*
+!backend/uploads/.gitkeep
+.schoolhub/
+backend-dev.log
+frontend-dev.log
