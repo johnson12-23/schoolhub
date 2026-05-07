@@ -1,6 +1,11 @@
-const API_URL =
-  import.meta.env.VITE_API_URL ||
-  (import.meta.env.DEV ? "http://localhost:5000/api" : "https://schoolhub-backend.vercel.app/api");
+const configuredApiUrl = import.meta.env.VITE_API_URL;
+const useHostedApiInProd =
+  !import.meta.env.DEV &&
+  (!configuredApiUrl || configuredApiUrl.includes("localhost"));
+
+const API_URL = useHostedApiInProd
+  ? "https://schoolhub-backend.vercel.app/api"
+  : configuredApiUrl || "http://localhost:5000/api";
 
 export async function apiRequest(path, options = {}) {
   const token = localStorage.getItem("schoolhub_token");
