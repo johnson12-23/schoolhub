@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { apiRequest } from "../lib/api.js";
 
 function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -15,17 +16,10 @@ function ForgotPasswordPage() {
     setLoading(true);
 
     try {
-      const response = await fetch("/api/auth/forgot-password", {
+      await apiRequest("/auth/forgot-password", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email })
       });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to process request");
-      }
 
       setMessage("Check your email for password reset instructions");
       setEmail("");
