@@ -66,11 +66,10 @@ function LoginPage() {
           </button>
         </form>
 
-        <div className="mt-6 rounded-2xl bg-brand-cream p-4 text-sm text-slate-600">
-          <p className="font-bold text-slate-800">Demo accounts</p>
-          <p className="mt-1">Student: student@schoolhub.gh / password123</p>
-          <p>Teacher: teacher@schoolhub.gh / password123</p>
-          <p>Admin: admin@schoolhub.gh / password123</p>
+        <div className="mt-6 text-center">
+          <Link to="/forgot-password" className="text-sm font-semibold text-brand-green hover:text-brand-green/80">
+            Forgot my password?
+          </Link>
         </div>
 
         <p className="mt-6 text-sm text-slate-500">
