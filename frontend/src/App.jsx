@@ -10,6 +10,7 @@ import RegisterPage from "./pages/RegisterPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import ResourcesPage from "./pages/ResourcesPage";
 import UploadPage from "./pages/UploadPage";
+import AdminPage from "./pages/AdminPage";
 
 function AuthLandingRoute() {
   const { isAuthenticated, loading } = useAuth();
@@ -95,6 +96,14 @@ function App() {
           element={
             <ProtectedRoute allowedRoles={["student", "teacher", "admin"]}>
               <DashboardPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute allowedRoles={["admin"]}>
+              <AdminPage />
             </ProtectedRoute>
           }
         />

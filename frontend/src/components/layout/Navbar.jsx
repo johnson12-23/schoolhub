@@ -47,6 +47,14 @@ function Navbar() {
               >
                 Dashboard
               </NavLink>
+              {user?.role === "admin" && (
+                <NavLink
+                  to="/admin"
+                  className="rounded-full px-4 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100"
+                >
+                  Admin
+                </NavLink>
+              )}
               {(user?.role === "teacher" || user?.role === "admin") && (
                 <NavLink
                   to="/upload"
@@ -114,6 +122,15 @@ function Navbar() {
                 >
                   <LayoutDashboard size={18} /> Dashboard
                 </NavLink>
+                {user?.role === "admin" && (
+                  <NavLink
+                    to="/admin"
+                    className="flex items-center gap-2 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-100"
+                    onClick={() => setOpen(false)}
+                  >
+                    <LayoutDashboard size={18} /> Admin
+                  </NavLink>
+                )}
                 {(user?.role === "teacher" || user?.role === "admin") && (
                   <NavLink
                     to="/upload"
