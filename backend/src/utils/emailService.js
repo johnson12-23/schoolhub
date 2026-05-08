@@ -37,7 +37,14 @@ export function consumeResetToken(token) {
   resetTokens.delete(token);
 }
 
-// Email service (logs to console in development, use real provider in production)
+import sgMail from "@sendgrid/mail";
+
+// Set SendGrid API key if available
+if (process.env.SENDGRID_API_KEY) {
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+}
+
+// Email service (logs to console in development, sends real emails in production)
 export async function sendPasswordResetEmail(email, resetToken) {
   const resetLink = `${process.env.FRONTEND_URL || "http://localhost:5173"}/reset-password?token=${resetToken}`;
 
@@ -57,7 +64,27 @@ Best regards,
 SchoolHub Team
   `;
 
-  // TODO: In production, replace with actual email service (SendGrid, AWS SES, etc.)
+  // Check if SendGrid is configured
+  if (process.env.SENDGRID_API_KEY && process.env.FROM_EMAIL) {
+    try {
+      const msg = {
+        to: email,
+        from: process.env.FROM_EMAIL,
+        subject: "Password Reset Request - SchoolHub",
+        text: message,
+        html: message.replace(/\n/g, "<br>")
+      };
+
+      await sgMail.send(msg);
+      console.log(`✅ Password reset email sent to ${email}`);
+      return true;
+    } catch (error) {
+      console.error("❌ Failed to send email via SendGrid:", error.message);
+      // Fall back to console logging
+    }
+  }
+
+  // Fallback: log to console (development mode)
   console.log("=== PASSWORD RESET EMAIL ===");
   console.log(`To: ${email}`);
   console.log(`Subject: Password Reset Request - SchoolHub`);
