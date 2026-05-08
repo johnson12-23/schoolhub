@@ -6,5 +6,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/schoolhub-admin/:path*"]
+  matcher: ["/schoolhub-admin", "/schoolhub-admin/:path*"]
 };
