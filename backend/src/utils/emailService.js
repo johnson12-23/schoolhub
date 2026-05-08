@@ -1,4 +1,5 @@
 import crypto from "crypto";
+import { Resend } from "resend";
 
 // In-memory store for password reset tokens
 // In production, use a database or Redis
@@ -37,12 +38,7 @@ export function consumeResetToken(token) {
   resetTokens.delete(token);
 }
 
-import sgMail from "@sendgrid/mail";
-
-// Set SendGrid API key if available
-if (process.env.SENDGRID_API_KEY) {
-  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-}
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
 // Email service (logs to console in development, sends real emails in production)
 export async function sendPasswordResetEmail(email, resetToken) {
@@ -64,22 +60,20 @@ Best regards,
 SchoolHub Team
   `;
 
-  // Check if SendGrid is configured
-  if (process.env.SENDGRID_API_KEY && process.env.FROM_EMAIL) {
+  if (resend && process.env.FROM_EMAIL) {
     try {
-      const msg = {
-        to: email,
+      await resend.emails.send({
         from: process.env.FROM_EMAIL,
+        to: email,
         subject: "Password Reset Request - SchoolHub",
         text: message,
-        html: message.replace(/\n/g, "<br>")
-      };
+        html: message.replace(/\n/g, "<br />")
+      });
 
-      await sgMail.send(msg);
       console.log(`✅ Password reset email sent to ${email}`);
       return true;
     } catch (error) {
-      console.error("❌ Failed to send email via SendGrid:", error.message);
+      console.error("❌ Failed to send email via Resend:", error);
       // Fall back to console logging
     }
   }
