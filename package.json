@@ -4,7 +4,8 @@
   "version": "1.0.0",
   "workspaces": [
     "frontend",
-    "backend"
+    "backend",
+    "admin"
   ],
   "scripts": {
     "dev": "powershell -ExecutionPolicy Bypass -File scripts/dev.ps1",
@@ -12,7 +13,9 @@
     "install:all": "npm install --workspaces",
     "dev:frontend": "npm --workspace frontend run dev",
     "dev:backend": "npm --workspace backend run dev",
+    "dev:admin": "npm --workspace admin run dev",
     "build:frontend": "npm --workspace frontend run build",
+    "build:admin": "npm --workspace admin run build",
     "seed:backend": "npm --workspace backend run seed"
   }
 }

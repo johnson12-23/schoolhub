@@ -1,4 +1,4 @@
-import { BookOpen, LayoutDashboard, LogOut, Menu, Upload } from "lucide-react";
+import { BookOpen, LayoutDashboard, LogOut, Menu, ShieldCheck, Upload } from "lucide-react";
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
@@ -10,10 +10,29 @@ const links = [
 
 function Navbar() {
   const [open, setOpen] = useState(false);
-  const { isAuthenticated, logout, user } = useAuth();
+  const { impersonatingAdmin, isAuthenticated, isImpersonating, logout, returnToAdmin, user } = useAuth();
 
   return (
     <header className="sticky top-0 z-40 border-b border-white/60 bg-white/85 backdrop-blur">
+      {isImpersonating ? (
+        <div className="bg-amber-50 text-amber-900">
+          <div className="container-shell flex flex-col gap-2 py-2 text-sm font-semibold sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-2">
+              <ShieldCheck size={17} />
+              <span>
+                {impersonatingAdmin?.name} is accessing {user?.name}'s {user?.role} account.
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={returnToAdmin}
+              className="self-start rounded-full bg-white px-4 py-1.5 text-xs font-extrabold text-amber-900 ring-1 ring-amber-200 transition hover:bg-amber-100 sm:self-auto"
+            >
+              Return to admin
+            </button>
+          </div>
+        </div>
+      ) : null}
       <div className="container-shell flex items-center justify-between py-3">
         <Link to="/" className="flex items-center gap-3">
           <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-green text-white shadow-soft">

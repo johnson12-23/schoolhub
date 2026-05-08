@@ -1,23 +1,7 @@
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import { createUser, findUserByEmail, updateUserPassword } from "../services/userService.js";
+import { publicUser, signToken } from "../utils/authTokens.js";
 import { generateResetToken, storeResetToken, verifyResetToken, consumeResetToken, sendPasswordResetEmail } from "../utils/emailService.js";
-
-function signToken(user) {
-  return jwt.sign({ sub: user.id, role: user.role }, process.env.JWT_SECRET || "change_this_secret", {
-    expiresIn: "7d"
-  });
-}
-
-function publicUser(user) {
-  return {
-    id: user.id,
-    name: user.name,
-    email: user.email,
-    role: user.role,
-    createdAt: user.createdAt
-  };
-}
 
 export async function register(req, res, next) {
   try {
@@ -129,4 +113,3 @@ export async function resetPassword(req, res, next) {
     next(error);
   }
 }
-

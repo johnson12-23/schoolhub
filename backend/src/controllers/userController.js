@@ -1,4 +1,5 @@
 import { findUserById, listUsers, updateUserRole, removeUser as deleteUser } from "../services/userService.js";
+import { publicUser, signToken } from "../utils/authTokens.js";
 
 export async function getUsers(_req, res, next) {
   try {
@@ -15,7 +16,7 @@ export async function getUserById(req, res, next) {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    return res.json({ user });
+    return res.json({ user: publicUser(user) });
   } catch (error) {
     next(error);
   }
@@ -33,6 +34,30 @@ export async function changeUserRole(req, res, next) {
     return res.json({
       message: "User role updated successfully",
       user
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function accessUserAccount(req, res, next) {
+  try {
+    const targetUser = await findUserById(req.params.id);
+
+    if (!targetUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const token = signToken(targetUser, {
+      impersonatedBy: req.user.id,
+      impersonatedByRole: req.user.role
+    });
+
+    return res.json({
+      message: `Access granted for ${targetUser.name}`,
+      token,
+      user: publicUser(targetUser),
+      admin: publicUser(req.user)
     });
   } catch (error) {
     next(error);

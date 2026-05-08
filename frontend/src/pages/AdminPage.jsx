@@ -1,14 +1,17 @@
-import { Search, Trash2, X } from "lucide-react";
+import { LogIn, Search, Trash2, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { apiRequest } from "../lib/api";
 
 function AdminPage() {
-  const { user } = useAuth();
+  const { accessAccount, user } = useAuth();
+  const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [status, setStatus] = useState({ type: "", message: "" });
   const [userSearch, setUserSearch] = useState("");
   const [deletingUserId, setDeletingUserId] = useState("");
+  const [accessingUserId, setAccessingUserId] = useState("");
   const [viewingUser, setViewingUser] = useState(null);
   const [viewingUserId, setViewingUserId] = useState("");
   const [viewingUserLoading, setViewingUserLoading] = useState(false);
@@ -35,6 +38,11 @@ function AdminPage() {
   }, [userSearch, users]);
 
   async function handleRoleChange(userId, role) {
+    if (user?.id === userId) {
+      setStatus({ type: "error", message: "You cannot change your own admin role here." });
+      return;
+    }
+
     setStatus({ type: "", message: "" });
     setRoleUpdatingId(userId);
 
@@ -50,6 +58,24 @@ function AdminPage() {
       setStatus({ type: "error", message: error.message });
     } finally {
       setRoleUpdatingId("");
+    }
+  }
+
+  async function handleAccessUser(userId) {
+    if (user?.id === userId) {
+      setStatus({ type: "error", message: "You are already using your own admin account." });
+      return;
+    }
+
+    setStatus({ type: "", message: "" });
+    setAccessingUserId(userId);
+
+    try {
+      await accessAccount(userId);
+      navigate("/dashboard");
+    } catch (error) {
+      setStatus({ type: "error", message: error.message });
+      setAccessingUserId("");
     }
   }
 
@@ -150,7 +176,18 @@ function AdminPage() {
                 <tr key={entry.id} className="border-t border-slate-100">
                   <td className="px-6 py-4 font-semibold text-slate-800">{entry.name}</td>
                   <td className="px-6 py-4 text-slate-600">{entry.email}</td>
-                  <td className="px-6 py-4 capitalize text-slate-600">{entry.role}</td>
+                  <td className="px-6 py-4 text-slate-600">
+                    <select
+                      className="input-field min-w-32 capitalize"
+                      value={entry.role}
+                      onChange={(event) => handleRoleChange(entry.id, event.target.value)}
+                      disabled={roleUpdatingId === entry.id || entry.id === user?.id}
+                    >
+                      <option value="student">Student</option>
+                      <option value="teacher">Teacher</option>
+                      <option value="admin">Admin</option>
+                    </select>
+                  </td>
                   <td className="px-6 py-4 text-slate-600">
                     {new Date(entry.createdAt).toLocaleDateString()} {new Date(entry.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                   </td>
@@ -162,6 +199,15 @@ function AdminPage() {
                       className="inline-flex items-center gap-2 rounded-full border border-slate-200 px-4 py-2 font-bold text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
                     >
                       {viewingUserLoading && viewingUserId === entry.id ? "Loading..." : "View"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleAccessUser(entry.id)}
+                      disabled={accessingUserId === entry.id || entry.id === user?.id}
+                      className="inline-flex items-center gap-2 rounded-full border border-brand-green/20 px-4 py-2 font-bold text-brand-green transition hover:bg-brand-green/5 disabled:cursor-not-allowed disabled:opacity-60"
+                    >
+                      <LogIn size={16} />
+                      {accessingUserId === entry.id ? "Opening..." : "Access"}
                     </button>
                     <button
                       type="button"
