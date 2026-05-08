@@ -88,6 +88,24 @@ export async function updateUserRole(userId, role) {
   return stripPassword(user);
 }
 
+export async function removeUser(userId) {
+  if (supabaseEnabled) {
+    const { error } = await supabase.from("users").delete().eq("id", userId);
+    if (error) throw new Error(error.message);
+    return true;
+  }
+
+  const index = demoUsers.findIndex((entry) => entry.id === userId);
+  if (index === -1) {
+    const error = new Error("User not found");
+    error.status = 404;
+    throw error;
+  }
+
+  demoUsers.splice(index, 1);
+  return true;
+}
+
 export async function updateUserPassword(userId, passwordHash) {
   if (supabaseEnabled) {
     const { error } = await supabase
