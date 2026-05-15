@@ -21,15 +21,23 @@ export function DataTable({
             </tr>
           </thead>
           <tbody>
-            {rows.map((row, rowIndex) => (
-              <tr key={rowIndex} className="border-t border-slate-100 dark:border-white/10">
-                {row.map((cell, cellIndex) => (
-                  <td key={cellIndex} className="px-5 py-4 text-slate-700 dark:text-slate-200">
-                    {cell}
-                  </td>
-                ))}
+            {rows.length ? (
+              rows.map((row, rowIndex) => (
+                <tr key={rowIndex} className="border-t border-slate-100 dark:border-white/10">
+                  {row.map((cell, cellIndex) => (
+                    <td key={cellIndex} className="px-5 py-4 text-slate-700 dark:text-slate-200">
+                      {cell}
+                    </td>
+                  ))}
+                </tr>
+              ))
+            ) : (
+              <tr className="border-t border-slate-100 dark:border-white/10">
+                <td colSpan={columns.length} className="px-5 py-10 text-center text-sm font-semibold text-slate-500">
+                  No records match this view.
+                </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>
