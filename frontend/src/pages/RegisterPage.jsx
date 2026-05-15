@@ -30,13 +30,23 @@ function RegisterPage() {
   }
 
   return (
-    <div className="container-shell py-12">
-      <div className="mx-auto max-w-md card-surface p-8">
-        <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-brand-green">Get started</p>
-        <h1 className="mt-3 text-3xl font-extrabold text-slate-900">Join SchoolHub</h1>
-        <p className="mt-2 text-sm text-slate-600">
-          Create your account to unlock the home page, resources, and your personal dashboard.
-        </p>
+    <div
+      className="relative min-h-screen w-full bg-cover bg-center bg-no-repeat flex items-center justify-center py-12"
+      style={{
+        backgroundImage: 'url(/hero-bg.jpg)',
+      }}
+    >
+      {/* Dark overlay */}
+      <div className="absolute inset-0 bg-black/40"></div>
+      
+      {/* Content */}
+      <div className="relative z-10 mx-auto w-full max-w-md">
+        <div className="card-surface p-8 rounded-3xl">
+          <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-brand-green">Get started</p>
+          <h1 className="mt-3 text-3xl font-extrabold text-slate-900">Join SchoolHub</h1>
+          <p className="mt-2 text-sm text-slate-600">
+            Create your account to unlock the home page, resources, and your personal dashboard.
+          </p>
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-4">
           <label className="block space-y-2">
@@ -93,12 +103,13 @@ function RegisterPage() {
           </button>
         </form>
 
-        <p className="mt-6 text-sm text-slate-500">
-          Already have an account?{" "}
-          <Link to="/login" className="font-bold text-brand-green">
-            Login instead
-          </Link>
-        </p>
+          <p className="mt-6 text-sm text-slate-500">
+            Already have an account?{" "}
+            <Link to="/login" className="font-bold text-brand-green">
+              Login instead
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );
