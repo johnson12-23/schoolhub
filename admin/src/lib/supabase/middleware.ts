@@ -1,9 +1,9 @@
 import { createServerClient } from "@supabase/ssr";
 import type { CookieOptions } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { getAdminAccess } from "@/lib/admin-auth";
 
 const adminRoute = process.env.NEXT_PUBLIC_ADMIN_ROUTE || "/schoolhub-admin";
-const adminRoles = ["super_admin", "teacher_admin", "accountant_admin", "moderator"];
 type CookieToSet = { name: string; value: string; options: CookieOptions };
 
 export async function updateSession(request: NextRequest) {
@@ -49,13 +49,7 @@ export async function updateSession(request: NextRequest) {
   }
 
   if (user && !isLoginPage) {
-    const { data: admin } = await supabase
-      .from("admins")
-      .select("id, role, status")
-      .eq("auth_user_id", user.id)
-      .maybeSingle();
-
-    const allowed = admin?.status === "active" && adminRoles.includes(admin.role);
+    const { allowed } = await getAdminAccess(supabase, user);
 
     if (!allowed) {
       await supabase.auth.signOut();

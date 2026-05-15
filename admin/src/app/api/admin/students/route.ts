@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { getAdminAccess } from "@/lib/admin-auth";
 import { studentSchema } from "@/lib/validators/student";
 import { createClient } from "@/lib/supabase/server";
 
@@ -12,13 +13,9 @@ async function requireAdmin() {
     return { supabase, error: NextResponse.json({ message: "Authentication required" }, { status: 401 }) };
   }
 
-  const { data: admin } = await supabase
-    .from("admins")
-    .select("role, status")
-    .eq("auth_user_id", user.id)
-    .maybeSingle();
+  const { allowed, role } = await getAdminAccess(supabase, user);
 
-  if (admin?.status !== "active" || !["super_admin", "teacher_admin"].includes(admin.role)) {
+  if (!allowed || !["super_admin", "teacher_admin"].includes(role || "")) {
     return { supabase, error: NextResponse.json({ message: "Permission denied" }, { status: 403 }) };
   }
 
