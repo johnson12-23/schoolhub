@@ -4,7 +4,7 @@ function AuthLandingPage() {
   return (
     <div
       className="relative min-h-screen bg-cover bg-center bg-no-repeat"
-      style={{ backgroundImage: "url(/gallery/hero-bg.jpg)" }}
+      style={{ backgroundImage: "url(/gallery/hero-bg-jpg.png)" }}
     >
       <div className="absolute inset-0 bg-slate-950/70" />
       <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6 py-24 text-center text-white">
