@@ -169,6 +169,20 @@ function DashboardPage() {
         </p>
       </div>
 
+      {user?.role === "admin" && (
+        <div className="mt-6 flex flex-col gap-4 rounded-3xl border border-slate-200 bg-slate-50 p-5 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="text-sm font-semibold text-slate-700">Admin console ready</p>
+            <p className="text-sm text-slate-500">
+              Access user management, role controls, and platform-wide settings from the admin area.
+            </p>
+          </div>
+          <Link to="/admin" className="btn-primary px-5 py-3">
+            Open Admin Console
+          </Link>
+        </div>
+      )}
+
       <div className="mt-8 grid gap-5 md:grid-cols-3">
         {stats.map((stat) => (
           <article key={stat.title} className="card-surface p-6">
