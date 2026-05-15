@@ -3,6 +3,12 @@ import type { SupabaseClient, User } from "@supabase/supabase-js";
 const adminRoles = ["super_admin", "teacher_admin", "accountant_admin", "moderator"];
 
 export async function getAdminAccess(supabase: SupabaseClient, user: User) {
+  const metadataRole = user.app_metadata?.admin_role || user.app_metadata?.role;
+
+  if (typeof metadataRole === "string" && adminRoles.includes(metadataRole)) {
+    return { allowed: true, role: metadataRole };
+  }
+
   const { data: legacyUser, error: legacyError } = await supabase
     .from("users")
     .select("id, role")

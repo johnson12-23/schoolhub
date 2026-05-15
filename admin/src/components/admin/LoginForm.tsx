@@ -29,7 +29,6 @@ export function LoginForm() {
     }
 
     router.replace(searchParams.get("next") || "/schoolhub-admin");
-    router.refresh();
   }
 
   async function handleForgotPassword() {
