@@ -11,12 +11,13 @@ import ResetPasswordPage from "./pages/ResetPasswordPage";
 import ResourcesPage from "./pages/ResourcesPage";
 import UploadPage from "./pages/UploadPage";
 import AdminPage from "./pages/AdminPage";
+import AuthLandingPage from "./pages/AuthLandingPage";
 
 function AuthLandingRoute() {
   const { isAuthenticated, loading } = useAuth();
 
   if (loading) return null;
-  return <Navigate to={isAuthenticated ? "/" : "/login"} replace />;
+  return isAuthenticated ? <Navigate to="/dashboard" replace /> : <AuthLandingPage />;
 }
 
 function PublicOnlyRoute({ children }) {

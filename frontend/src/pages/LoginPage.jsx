@@ -26,23 +26,13 @@ function LoginPage() {
   }
 
   return (
-    <div
-      className="relative min-h-screen w-full bg-cover bg-center bg-no-repeat flex items-center justify-center py-12"
-      style={{
-        backgroundImage: 'url(/gallery/hero-bg.jpg)',
-      }}
-    >
-      {/* Dark overlay */}
-      <div className="absolute inset-0 bg-black/40"></div>
-      
-      {/* Content */}
-      <div className="relative z-10 mx-auto w-full max-w-md">
-        <div className="card-surface p-8 rounded-3xl">
-          <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-brand-green">Welcome back</p>
-          <h1 className="mt-3 text-3xl font-extrabold text-slate-900">Login to SchoolHub</h1>
-          <p className="mt-2 text-sm text-slate-600">
-            Sign in to open your learning space and access books, slides, and past questions.
-          </p>
+    <div className="container-shell py-12">
+      <div className="mx-auto max-w-md card-surface p-8">
+        <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-brand-green">Welcome back</p>
+        <h1 className="mt-3 text-3xl font-extrabold text-slate-900">Login to SchoolHub</h1>
+        <p className="mt-2 text-sm text-slate-600">
+          Sign in to open your learning space and access books, slides, and past questions.
+        </p>
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-4">
           <label className="block space-y-2">
@@ -88,7 +78,7 @@ function LoginPage() {
               Join Now
             </Link>
           </p>
-        </div>
+
       </div>
     </div>
   );
